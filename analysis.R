@@ -1,90 +1,256 @@
-# Assignment 1: Protests
+# Overview ----------------------------------------------------------------
 
-During the past few years in the United States, there has been a surge of protests in support of the Black Lives Matter movement, women's rights, trans rights, immigration reform, gun control, the environment, and many other social and political issues.
+# Assignment 1
 
-In this assignment, you will work with data from [CountLove](https://countlove.org/), a group that collects data about protests from across the United States, including information about the purpose of the protests, the location of the protests, as well as how many people attended the protests. This data has often been [cited by the *New York Times*](https://www.nytimes.com/2020/08/28/us/black-lives-matter-protest.html), among other major outlets.
+# You will answer the following questions and more by completing the code below:
 
-Through this assignment, you will be able to answer questions including:
-- What were the most attended and least attended protests in the US in the last 5 years?
-- How many protests occurred in Washington state?
-- How did the number of protests in 2019 compare to 2020, and why?
-- Why are people protesting in the US? What are the biggest motivators?
+# - What were the most attended and least attended protests in the US in the
+#     last 5 years?
+# - How many protests occurred in Washington state?
+# - How did protests in 2019 compare to 2020, and why?
+# - What are the biggest reasons people are protesting in the US?
+
+# For each question/prompt, write the necessary code to get the answer. Each
+# question is worth 2 points.
+# You will store most of your answers in the variable names listed with the
+# questions in `backtics`.
+# There are 4 prompts marked `Reflection`. Be sure to write your responses to
+# these questions in the `README.md` file.
+
+# NOTE: We recommend that you turn on "Soft Wrap Long Lines" to work with this
+# file so you can read the instructions more easily.
+
+# Part 1: Set up (12 points) ---------------------------------------------------
+
+# In this section, you will load the CountLove data and necessary packages.
+
+# (1.a) Load the `stringr` package, which you will use later.
+library(stringr)
+# (1.b) Load the data from CountLove by using the following URL:
+# https://countlove.org/data/data.csv
+# Save this dataframe into a variable called `protest_data`
+protest_data <- read.csv('https://countlove.org/data/data.csv')
+#  Whenever we load data, the first thing we want to do is manually examine it,
+# see how it looks, and make sure we understand what each column (or feature)
+# and each row (or record) in the dataset means.
+# Open the dataframe by clicking the spreadsheet icon in the Environment or by
+# using View(). Manually examine the data by scrolling through it.
+View(protest_data)
+
+# (1.c) Without using code, look at all the the column names in the dataset, and
+# then type each column name in the comment below, with each column name
+# separated by a comma.
+# Column 1, Column 2, Column 3...
+#Date, Location, Attendes, Event_Legacy_See_Tags, Tags, Curated, Source, Total.Articles
+
+# (1.d) Without using code, pick one row in the dataset (any row!), and then
+# type in all the values from that row, with each value separated by a comma.
+# For ex: 2018-01-01, University of Washington, Seattle, WA...
+#2017-01-15, Bowie State University, Bowie, MD, 1500, Healthcare, Healthcare; For Affordable Care Act, Yes, http://www.capitalgazette.com/news/ph-ac-cn-aca-rally-0116-20170115-story.html, 1
+
+# (1.e) How many protests are recorded in the dataset in total? Use an R
+# function to determine this number and then save it in a variable called
+# `num_protests`
+# Hint: This is the same number as the number of rows in the dataset!
+num_protests <- nrow(protest_data)
+
+# (1.f) How many features (or columns) are recorded for each protest? It's
+# important to know how to find this number programmatically as well as manually
+# Save the number of features for each protest in a variable called
+# `num_features`
+num_features <- ncol(protest_data)
+
+## Part 2: Attendees (12 points) -----------------------------------------------
+# In this part, you will explore the number of people who participated in the protests
+
+# (2.a) Extract the `Attendees` column into a variable called `num_attendees`
+num_attendees <- protest_data [, 3]
+
+# (2.b) What is the fewest number of attendees at a protest?
+# Save the number of protests in a variable called `min_attendees`
+# Hint: Remember to exclude NA values when using the functions below!
+min_attendees <- min(num_attendees, na.rm = T)
+
+# (2.c) What is the greatest number of attendees at a protest?
+# Save the number of protests in a variable called `max_attendees`
+max_attendees <- max(num_attendees, na.rm = T)
+
+# (2.d) What is the average (mean) number of attendees at a protest?
+# Save the number of protests in a variable called `mean_attendees`
+mean_attendees <- mean(num_attendees, na.rm = T)
+
+# (2.e) What is the median number of attendees?
+# Save the number of protests in a variable called `median_attendees`
+median_attendees <- median(num_attendees, na.rm = T)
+
+# (2.f) What is the difference between the mean and median number of attendees?
+# Subtract median_attendees from mean_attendees
+# Save the difference in a variable called `difference_attendees`
+difference_attendees <- mean_attendees - median_attendees
+
+# Reflection 1 (answer in the README.md file)
+# Why do you think the mean is higher than the median? Which metric would you
+# use in a report about this data, and why?
 
 
-This assignment is divided into 2 parts. You will complete your coding work in the `analysis.R` file, and you will write short answer responses related to critical analysis and reflection of the data in this `README.md` file. Before getting started on your coding work, you should complete the section **"Critical Analysis & Reflection: Before You Code"** below.
+## Part 3: Locations (20 points) -----------------------------------------------
+# In this part, you will explore where protests happened.
 
-When you are finished with the assignment, be sure to push all changes to your GitHub repository and then submit the link on Canvas.
+# (3.a) Extract the `Location` column into a variable called `locations`
+location <-  protest_data [, 2]
 
-## Before You Code: Critical Analysis & Reflection
+# (3.b) How many *unique* locations are in the dataset?
+# Save the NUMBER of unique locations in a variable called `num_locations`
+num_locations <- nrow(location)
 
-Before diving into this (or any) dataset, it's important to know where the data came from, and it's important to have or to seek out _domain familiarity_ — in other words, knowledge about the subject/topic of the dataset. (We don't want to be "strangers in the dataset," as Catherine D'Ignazio and Lauren Klein describe it.)
+# (3.c) How many protests occurred in the state of Washington?
+# Use a function from the stringr package to detect the letters "WA" in the
+# Location column and filter to only keep WA locations
+# Then, calculate the number of protests recorded in Washington
+# Save the NUMBER of WA locations in a variable called `num_in_wa`
+num_in_wa <- nrow(str_starts("washington", "WA"))
 
-To get more familiar, we are going to begin by doing some background reading.
+# (3.d) What proportiostring = # (3.d) What proportion of protests occurred in Washington?
+# Divide the number of protests in Washington by the total number of protests
+# Save this proportion in a variable called `prop_in_wa`
+prop_in_wa <- num_locations / num_in_wa
 
-- First, please read [this FAQ](https://countlove.org/faq.html) from the CountLove website and the opening of [this blog post](https://www.tommyleung.com/countLove/index.htm). Based on the information in these pieces, why did the creators start collecting the CountLove data? Please answer in 2-3 sentences (3 points)
-They said that protest are a way of comunicating with elected leaders.They hope that the demonstration will help cizitzens. 
-
-- Next, we would like you to read this [*New York Times* piece, which uses CountLove data](https://www.nytimes.com/interactive/2020/06/13/us/george-floyd-protests-cities-photos.html) (here's a [Google Doc version for anyone who gets paywalled](https://docs.google.com/document/d/1sdjFsA5csYuH4plNEEk7WXT77K5h5ZuyW05CBwYdk6A/edit?usp=sharing)), and which describes the Black Lives Matter protests that occurred in the summer of 2020. Please summarize the main point or argument of this article in 2-3 sentences (3 points) The main point is that a lot of people protested. Not just in one state but in all the states there was protests. Black lives matter reached all over america.
-
-Next, we're going to reflect about who collected this data, and what's actually inside it.
-
-- Who collected and shared the CountLove data, and what do they do for a living? Please answer in 1-2 sentences(2 points) 
-
-The people who collected the data are Tommy Leung and Nathan Perkins. They are engineers and scientists with a keen interest in civic responsibility and public policy
-
-- As Klein and D'Ignazio remind us, when it comes to data, "what gets counted counts." What types of demonstrations does CountLove include in their data, and what types do they exclude? (3 points)
-
-They count public displays of protest. They do not include awareness events, commemorative celebrations, historic reenactments, fundraising events, townhalls, or political campaign rallies.
-
-- How and where does CountLove get their data about the protests? Please answer in 2-3 sentences (2 points)
-
-They crawl local newspaper and television sites on a daily basis. Thats where they get most of their data from.
-
-- How does CountLove make their estimates about the number of people who attended a protest? What potential problems might arise from this method of estimation? Please answer in 3-4 sentences (4 points)
-
-They get their count from news articles that they link. They interpret “a dozen” as 10, “dozens” as 20, “hundreds” as 100.
-
-## While You Code: Critical Analysis & Reflection
-
-- Reflection 1: Why do you think the mean is higher than the median? Which metric would you use in a report about this data, and why? Please answer in 2-3 sentences (2 points) 
-
-The mean is bigger because it includes all protests and the median is just the middle number. I would use the mean because there was multiple protests in america and the middle number would not be an accurate number for all those protests.
-
-- Reflection 2: Before actually calculating the number of protests that occurred in 2018, 2019, 2020, record your guesses for the following questions. (1 point)
-
-  Guess: Do you think there were more protests in 2019 than in 2018? Why or why not? Please answer in 1 or 2 sentences
+# (3.e) Now, using the same stringr function and building on the code that
+# you've written above, write a function `count_protests_in_location()` that
+# accepts a location and then returns (not prints) the following sentence:
+# "There were [N] protests in [LOCATION]."
+# For example: "There were 20 protests in Seattle." "There were 50 protests in
+# NY." 
+# If the location is not found in the dataset, the function should return the
+# sentence: "Sorry, that location is not found."
+  count_protests_in_location <- function(name){
+    return("There were num protests in location.")
+    
+  }
   
-  There was more protests in 2019 because I do not remeber any protests in 2018.
+# (3.f) Use your `count_protests_in_location()` function above to compute the
+# number of protests in "Washington, DC" and return the resulting message
+# Save the resulting message in a variable called `dc_summary`
 
-  Guess: Do you think there were more protests in 2020 than in 2019? Why or why not? Please answer in 1 or 2 sentences
+# (3.g) Use your function above to compute the number of protests in
+# "Minneapolis" and return the resulting message
+# # Save the resulting message in a variable called `minneapolis_summary`
   
-  There was more protests in 2020 because black lives matter movement was huge it was all over the US, the movement made so many people protest all around the US.
+  minneapolis_summary <-
 
-- Reflection 3: Does the change in the number of protests from 2018 to 2019 to 2020 surprise you? Why or why not? What do you think explains the fluctuation? Please answer in 1 or 2 sentences (2 points)
+# (3.h) Let's try to find out how many protests occurred in each state. To do
+# so, first use a stringr function to extract the last 2 characters from every
+# location and use these 2 characters to create a new vector called `states`
 
-It does not surprise me because the protest happened for different reasons and in 2020 there was the biggest movement I have seen.
+# (3.i) What are the unique states are in the dataset? Create a vector of just the
+# unique states in the dataset
+# Save the unique states in a variable called `uniq_states`
+# Hint: Due to the way the data was collected, you may notice some "nonsense"
+# state abbreviations, such as "CE." YOU DO NOT NEED TO FIX THIS, but you may
+# reflect to yourself on why this might be happening.
 
-- Reflection 4: What is the first and fourth most frequent category of protest? Do these frequencies align with your sense of the major protest movements in the U.S. in the last few years? Why or why not? (3 points)
+# (3.j) Now apply your `count_protests_in_location` function to every state in
+# `uniq_states` by using the `sapply()` function.
+# Store all your messages in a variable called `state_summary`
 
-Number one is nonviolent protests. Second is violent protests. Third is silent protests. Fourth is boycotting something. Yes because all those types of protests I have seen before and I am young.
+## Part 4: Dates (16 points) ---------------------------------------------------
+# In this part, you will explore *when* protests happened.
 
-## After You Code: Critical Analysis & Reflection
+# (4a) Extract the `Date` column and convert it into a data by using the
+# `as.Date()` function.
+# Save this value in a variable called `dates`
+dates <- protest_data [, 1]
+# (4.b) What is the most recent date in the dataset?
+# Store this value in a variable called `most_recent_protest`
+most_recent_protest <-
 
-In the second chapter of *Data Feminism*, Klein and D'Ignazio describe 4 ways that data scientists can challenge power and take action:
-> Taking action can itself take many forms, and in this chapter we offer four starting points:  
-> (1) Collect: Compiling counterdata—in the face of missing data or institutional neglect—offers a powerful starting point as we see in the example of the DGEI, or in María Salguero’s femicide maps discussed in chapter 1.  
-> (2) Analyze: Challenging power often requires demonstrating inequitable outcomes across groups, and new computational methods are being developed to audit opaque algorithms and hold institutions accountable.  
-> (3) Imagine: We cannot only focus on inequitable outcomes, because then we will never get to the root cause of injustice. In order to truly dismantle power, we have to imagine our end point not as “fairness,” but as co-liberation.  
-> (4) Teach: The identities of data scientists matter, so how might we engage and empower newcomers to the field in order to shift the demographics and cultivate the next generation of data feminists?  
+# (4.c) What is the earliest date in the dataset?
+# Store this value in a variable called `earliest_protest`
+earliest_protest <-
+  
+# (4.d) What is the timespan of the dataset — in other words, the distance
+# between the earliest protest and most recent protest?
+# Hint: R can do math with dates pretty well by default!
+# Store this value in a variable called `time_span`
+  time_span <-
 
-- How does the CountLove project embody one or more of these 4 forms of challenging power? Please answer in at least 3-4 sentences (3 points)
+# (4.e) Now, create a vector of only the dates that are in 2020.
+# Note: If you want only dates after a certain start date, you can use
+# "2020-01-01" with comparison operators (==, >=, <=)
+# Store this value in a variable called `protests_in_2020`
+  protests_in_2020 <- protest_data [protest_data$Date == 2020, ]
+# (4.f) Create a vector of only the dates that are in 2019.
+# Note: If you want only dates after a certain start date, you can use
+# "2020-01-01" with comparison operators (==, >=, <=)
+# Store this value in a variable called `protests_in_2019`
+  protests_in_2019 <- protest_data [protest_data$Date == 2019, ]
+# (4.g) Create a vector of only the dates that are in 2018.
+# Note: If you want only dates after a certain start date, you can use
+# "2020-01-01" with comparison operators (==, >=, <=)
+# Store this value in a variable called `protests_in_2018`
+protests_in_2018 <- protest_data [protest_data$Date == 2018, ]
+# Reflection 2 (answer in the README.md file)
+# When we're doing data analysis work, we always want to test our assumptions
+# and see whether or not patterns align with our expectations or depart from them.
+# Before actually calculating the number of protests that occurred in 2018,
+# 2019, 2020, record your guesses for the following questions.
+# Guess: Do you think there were more protests in 2019 than in 2018? Why or why not?
+# Guess: Do you think there were more protests in 2020 than in 2019? Why or why not?
 
-CountLove emobodys analyze form of challenging power. The reason they emobody analyze is because they collect data from all protest about one movement. Analyze is about collecting data from across groups.
 
-- What is the most interesting or surprising thing you learned from this analysis? Please answer in at least 2-3 sentences (2 points) 
+# (4.h) Now use the length() function to find out how many protests happened in
+# 2018 vs. 2019 vs. 2020. 
+# Save them in the varaibles `num_protests_in_2018`, `num_protests_in_2019`,
+# `num_protests_in_2020`
 
-The most interesting thing I learned from this analysis was there was so many protests that I did not know about. There was so many even before the black lives matter movement.
+# Reflection 3 (answer in the README.md file)
+# Does the change in the number of protests from 2018 to 2019 to 2020 surprise
+# you? Why or why not? What do you think explains the fluctuation?
 
-- What is a kind of analysis that you would like to do or that would be interesting to do with the CountLove data that you don't have the time or skills to accomplish at this moment? Please answer in at least 2-3 sentences (2 points)
 
-I would like to find how many people attend a protest. I find the way countlove get their attedees number very interesting.
+## Part 5: Protest Purpose (6 points) ------------------------------------------
+# In this section, you will explore *why* the protests happened.
+
+# (5.a) Extract the `Event..legacy..see.tags.` column into a variable called
+# `purposes`
+purposes <- protest_data [, 4]
+
+# (5.b) How many different unique purposes are listed in the dataset?
+# Save this NUMBER in a variable called `num_purposes`
+num_protests <- nrow(purposes)
+
+# That's quite a few! Use View() to examine the `purposes` vector. You will
+# notice a common pattern for each purpose, formatted something like this: Civil
+# Rights (Transgender Rights)
+View(purposes)
+
+# (5.c) To get a summary of just the higher level categories (e.g., just "Civil
+# Rights" and not "(Transgender Rights)"), we're going to use some R functions
+# to extract only the text before the parenthesis and then save them in a
+# variable `high_level_purposes`
+high_level_purposes <-
+
+# There are some built-in R functions where you can replace text using regular
+# expressions.
+# Regular expressions are a special syntax that lets you match patterns.
+# For example, see what happens when you run the code below, and use the help()
+# function to learn more about this function
+gsub("@.*", "", "melwalsh@uw.edu")
+help()
+# Note: Some regular expression characters, like parenthesis, have a special
+# meaning, so if you want to use them, you need to first "escape" them:
+# https://uc-r.github.io/regex#metacharacters
+# See what happens when you run the code below, and use the help() function to
+# learn more about this function
+trimws(" hello ")
+help()
+ 
+
+# Make a table of your `high_level_protests` by using table() and then View() it
+ table(View(high_level_purposes))
+# Reflection 4 (answer in README.md file): What is the first and fourth most
+# frequent category of protest? Do these frequencies align with your sense of
+# the major protest movements in the U.S. in the last few years? Why or why not? (3 points)
+
+# Congrats! You're finished. Don't forget to save, push all changes to GitHub,
+# and submit the link to your repository on Canvas!
